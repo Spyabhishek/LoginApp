@@ -12,7 +12,7 @@ export default function Password() {
 
   const formik = useFormik({
     initialValues: {
-      password: ''
+      password: 'admin@123'
     },
     
     validate: passwordValidate,
@@ -45,7 +45,7 @@ export default function Password() {
 
             <div className='textbox flex flex-col items-center gap-6'>
               <input {...formik.getFieldProps('password')} className={styles.textbox} type='text' placeholder='Password' />
-              <button className={styles.btn} type='submit'>Let's Go!</button>
+              <button className={styles.btn} type='submit'>Sign In</button>
             </div>
 
             <div className="text-center py-4">
