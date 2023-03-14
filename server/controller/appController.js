@@ -134,7 +134,24 @@ export async function login(req, res) {
 
 /** GET: http://localhost:8080/api/user/example123 */
 export async function getUser(req, res) {
-    res.json('getUser route');
+    const { username} = req.params;
+
+    try {
+            if(!username) return res.status(501).send({error: "Invalid Username"});
+            
+            UserModel.findOne({username}).then(user => {
+                // if(err) return res.status(500).send({err});
+                if(!user) return res.status(501).send({error : "Couldn't Find the User"});
+
+                /** Remove password from user */
+                // mongoose return unnecessary data with object so convert it into json
+                const {password , ...rest} = Object.assign({}, user.toJSON());
+
+                return res.status(201).send(rest);
+            })
+    } catch (error) {
+        return res. status(404).send({ error: " Cannot find the user"})
+    }
 }
 
 /** PUT: http://localhost:8080/api/updateuser 
