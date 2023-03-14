@@ -5,18 +5,18 @@ import ENV from '../config.js';
 
 
 /** middleware for verify user */
-export async function verifyUser(req, res, next){
+export async function verifyUser(req, res, next) {
     try {
-        
+
         const { username } = req.method == "GET" ? req.query : req.body;
 
         // check the user existance
         let exist = await UserModel.findOne({ username });
-        if(!exist) return res.status(404).send({ error : "Can't find User!"});
+        if (!exist) return res.status(404).send({ error: "Can't find User!" });
         next();
 
     } catch (error) {
-        return res.status(404).send({ error: "Authentication Error"});
+        return res.status(404).send({ error: "Authentication Error" });
     }
 }
 
@@ -134,23 +134,23 @@ export async function login(req, res) {
 
 /** GET: http://localhost:8080/api/user/example123 */
 export async function getUser(req, res) {
-    const { username} = req.params;
+    const { username } = req.params;
 
     try {
-            if(!username) return res.status(501).send({error: "Invalid Username"});
-            
-            UserModel.findOne({username}).then(user => {
-                // if(err) return res.status(500).send({err});
-                if(!user) return res.status(501).send({error : "Couldn't Find the User"});
+        if (!username) return res.status(501).send({ error: "Invalid Username" });
 
-                /** Remove password from user */
-                // mongoose return unnecessary data with object so convert it into json
-                const {password , ...rest} = Object.assign({}, user.toJSON());
+        UserModel.findOne({ username }).then(user => {
+            // if(err) return res.status(500).send({err});
+            if (!user) return res.status(501).send({ error: "Couldn't Find the User" });
 
-                return res.status(201).send(rest);
-            })
+            /** Remove password from user */
+            // mongoose return unnecessary data with object so convert it into json
+            const { password, ...rest } = Object.assign({}, user.toJSON());
+
+            return res.status(201).send(rest);
+        })
     } catch (error) {
-        return res. status(404).send({ error: " Cannot find the user"})
+        return res.status(404).send({ error: " Cannot find the user" })
     }
 }
 
@@ -165,7 +165,24 @@ body: {
 }
 */
 export async function updateUser(req, res) {
-    res.json('updateUser route');
+    try {
+        const id = req.query.id;
+
+        if(id){
+            const body = req.body;
+
+            // update the data
+            UserModel.updateOne({ _id: id}, body).then(data =>{
+                // if(err) throw err;
+
+                return res.status(201).send({msg: "Record Updated...!"})
+            })
+        }else{
+            return res.status(401).send({error: "User Not Found..!"})
+        }
+    } catch (error) {
+        return res.status(401).send({error} );
+    }
 }
 
 /** GET: http://localhost:8080/api/generateOTP */
