@@ -166,22 +166,24 @@ body: {
 */
 export async function updateUser(req, res) {
     try {
-        const id = req.query.id;
+        // const id = req.query.id;
 
-        if(id){
+        const { userId } = req.user;
+
+        if (id) {
             const body = req.body;
 
             // update the data
-            UserModel.updateOne({ _id: id}, body).then(data =>{
+            UserModel.updateOne({ _id: userId }, body).then(data => {
                 // if(err) throw err;
 
-                return res.status(201).send({msg: "Record Updated...!"})
+                return res.status(201).send({ msg: "Record Updated.!" })
             })
-        }else{
-            return res.status(401).send({error: "User Not Found..!"})
+        } else {
+            return res.status(401).send({ error: "User Not Found..!" })
         }
     } catch (error) {
-        return res.status(401).send({error} );
+        return res.status(401).send(error.message);
     }
 }
 
