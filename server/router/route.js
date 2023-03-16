@@ -21,6 +21,6 @@ router.route('/createResetSession').get(controller.createResetSession) // reset 
 /** PUT Methods*/
 import Auth from '../middleware/auth.js';
 router.route('/updateuser').put(Auth1, controller.updateUser); // is use to update the user profile
-router.route('/resetPassword').put(controller.resetPassword); // use to reset password
+router.route('/resetPassword').put(controller.verifyUser, controller.resetPassword); // use to reset password
 
 export default router;

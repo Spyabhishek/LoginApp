@@ -105,7 +105,7 @@ export async function login(req, res) {
             .then(user => {
                 bcrypt.compare(password, user.password)
                     .then(passwordCheck => {
-                        if (!passwordCheck) return res.status(400).send({ error: "Don't have Password" });
+                        if (!passwordCheck) return res.status(400).send({ error: "Password does not Match" });
 
                         // create jwt token
                         const token = Jwt.sign({
@@ -121,7 +121,7 @@ export async function login(req, res) {
 
                     })
                     .catch(error => {
-                        return res.status(400).send({ error: "Password does not Match" })
+                        return res.status(400).send({ error: "Don't have Password" })
                     })
 
             }).catch(err => {
@@ -200,7 +200,7 @@ export async function verifyOTP(req, res) {
     if (parseInt(req.app.locals.OTP) === parseInt(code)) {
         req.app.locals.OTP = null; // reset the OTP value
         req.app.locals.resetSession = true; // start session for reset password
-        return res.status(201).send({ msg: 'verifies successfully..!' })
+        return res.status(201).send({ msg: 'verified successfully..!' })
     }
     return res.status(400).send({ error: 'Invalid OTP' });
 }
@@ -218,6 +218,36 @@ export async function createResetSession(req, res) {
 // update the password when we have valid session
 /** PUT: http://localhost:8080/api/resetPassword */
 export async function resetPassword(req, res) {
-    res.json('resetPassword route');
+    try {
+        if (!req.app.locals.resetSession) return res.status(404).send({ error: "session expired..!" });
+        const { username, password } = req.body;
+
+        try {
+
+            UserModel.findOne({ username })
+                .then(user => {
+                    bcrypt.hash(password, 10)
+                        .then(hashedPassword => {
+                            UserModel.updateOne({ username: user.username },
+                                { password: hashedPassword }).then(data => {
+                                    return res.status(201).send({ msg: "Record Updated...!" })
+                                })
+                        })
+                        .catch(e => {
+                            return res.status(500).send({
+                                error: "Enable to hashed password"
+                            })
+                        })
+                })
+                .catch(error => {
+                    return res.status(404).send({ error: "Username not found" });
+                })
+        } catch (error) {
+            return res.status(500).send({ error })
+        }
+
+    } catch (error) {
+        return res.status(401).send({ error })
+    }
 }
 
