@@ -68,6 +68,7 @@ export async function register(req, res) {
                                 password: hashedPassword,
                                 profile: profile || '',
                                 email
+
                             });
 
                             // return save result as a response
@@ -171,7 +172,7 @@ export async function updateUser(req, res) {
 
         const { userId } = req.user;
 
-        if (id) {
+        if (userId) {
             const body = req.body;
 
             // update the data
