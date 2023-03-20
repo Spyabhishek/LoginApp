@@ -1,7 +1,7 @@
 import UserModel from '../model/User.model.js';
 import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
-import ENV from '../config.js';
+// import ENV from '../config.js';
 import otpGenerator from 'otp-generator';
 
 
@@ -112,7 +112,7 @@ export async function login(req, res) {
                         const token = Jwt.sign({
                             userId: user._id,
                             username: user.username
-                        }, ENV.JWT_SECRET, { expiresIn: "24h" });
+                        }, process.env.JWT_SECRET, { expiresIn: "24h" });
 
                         return res.status(200).send({
                             msg: "Login Successful...!",

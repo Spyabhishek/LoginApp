@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import Mailgen from 'mailgen';
+import dotenv from 'dotenv';
 
 import ENV from '../config.js';
 

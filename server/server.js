@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -13,6 +14,10 @@ app.use(morgan('tiny'));
 app.disable('x-powered-by'); // less hackers know about our stack
 
 const port = 8080;
+
+dotenv.config();
+
+
 
 /** HTTP GET Request */
 app.get('/', (req, res) => {

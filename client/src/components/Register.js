@@ -17,9 +17,9 @@ export default function Register() {
 
   const formik = useFormik({
     initialValues: {
-      email: 'example@email.com',
-      username: 'example',
-      password: 'example@123'
+      email: '',
+      username: '',
+      password: ''
     },
 
     validate: registerValidation,
